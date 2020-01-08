@@ -5,7 +5,8 @@ import re
 import urllib.request
 from wp_guardian import *
 
-wp_page = urllib.request.urlopen(url+'wordpress').read()
+wp_page = urllib.request.urlopen(url+'/wordpress').read()
+
 soup = BeautifulSoup(wp_page,"html.parser")
 
 def wp_version_finder(webpage):
@@ -16,3 +17,4 @@ def wp_version_finder(webpage):
 
 # if __name__ == "__main__":
 #     wp_version_finder(soup)
+    # print(wp_version_finder(soup))

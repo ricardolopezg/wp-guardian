@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+
 import sys
+import api_merge
 from page_fuzzer import *
 
 try:
