@@ -3,11 +3,10 @@
 from bs4 import BeautifulSoup
 import re
 import urllib.request
-import sys
+from wp_guardian import *
 
-url = 'http://3.82.102.163/wordpress' # refactor to get input from wp_guardian.py
+wp_page = urllib.request.urlopen(url+'/wordpress').read()
 
-wp_page = urllib.request.urlopen(url).read()
 soup = BeautifulSoup(wp_page,"html.parser")
 
 def wp_version_finder(webpage):
