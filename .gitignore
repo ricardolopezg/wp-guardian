@@ -1,2 +1,4 @@
 config.py
 __pycache__/
+wp_vulners_testing.py
+test.txt

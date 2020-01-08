@@ -5,7 +5,7 @@ import re
 import urllib.request
 import sys
 
-url = 'http://54.166.65.247/wordpress/' # refactor to get input from wp_guardian.py
+url = 'http://3.82.102.163/wordpress' # refactor to get input from wp_guardian.py
 
 wp_page = urllib.request.urlopen(url).read()
 soup = BeautifulSoup(wp_page,"html.parser")
@@ -18,3 +18,4 @@ def wp_version_finder(webpage):
 
 # if __name__ == "__main__":
 #     wp_version_finder(soup)
+    # print(wp_version_finder(soup))

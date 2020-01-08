@@ -1,0 +1,103 @@
+{
+  "echelon": {
+    "friendly_name": null,
+    "latest_version": null,
+    "last_updated": null,
+    "popular": false,
+    "vulnerabilities": [
+      {
+        "id": 7455,
+        "title": "Echelon - media-upload.php Remote File Upload",
+        "created_at": "2014-08-01T10:59:24.000Z",
+        "updated_at": "2019-10-21T11:33:35.000Z",
+        "published_date": "2014-08-01T10:59:24.000Z",
+        "vuln_type": "UPLOAD",
+        "references": {
+          "url": [
+            "https://www.securityfocus.com/bid/67080/",
+            "https://packetstormsecurity.com/files/126327/"
+          ]
+        },
+        "fixed_in": null
+      },
+      {
+        "id": 7456,
+        "title": "Echelon 2.4 - dl-skin.php _mysite_delete_skin_zip Parameter Absolute Path Traversal Remote Directory Deletion",
+        "created_at": "2014-08-01T10:59:24.000Z",
+        "updated_at": "2019-10-21T11:34:25.000Z",
+        "published_date": "2014-08-01T10:59:24.000Z",
+        "vuln_type": "UNKNOWN",
+        "references": {
+          "url": [
+            "https://www.securityfocus.com/bid/64501/"
+          ],
+          "exploitdb": [
+            "30443"
+          ]
+        },
+        "fixed_in": "2.5"
+      },
+      {
+        "id": 7457,
+        "title": "Echelon 2.4 - dl-skin.php _mysite_download_skin Parameter Absolute Path Traversal Remote File Download",
+        "created_at": "2014-08-01T10:59:24.000Z",
+        "updated_at": "2019-10-21T11:34:25.000Z",
+        "published_date": "2014-08-01T10:59:24.000Z",
+        "vuln_type": "UNKNOWN",
+        "references": {
+          "url": [
+            "https://www.securityfocus.com/bid/64501/"
+          ],
+          "exploitdb": [
+            "30443"
+          ]
+        },
+        "fixed_in": "2.5"
+      },
+      {
+        "id": 7540,
+        "title": "WordPress Slider Revolution Local File Disclosure",
+        "created_at": "2014-09-17T17:32:24.000Z",
+        "updated_at": "2019-10-21T21:07:35.000Z",
+        "published_date": "2015-02-11T00:00:00.000Z",
+        "vuln_type": "LFI",
+        "references": {
+          "url": [
+            "https://blog.sucuri.net/2014/09/slider-revolution-plugin-critical-vulnerability-being-exploited.html",
+            "https://packetstormsecurity.com/files/129761/"
+          ],
+          "cve": [
+            "2015-1579"
+          ],
+          "exploitdb": [
+            "34511"
+          ]
+        },
+        "fixed_in": "2.8.3"
+      },
+      {
+        "id": 7954,
+        "title": "WordPress Slider Revolution Shell Upload",
+        "created_at": "2015-05-03T07:05:26.000Z",
+        "updated_at": "2019-11-28T00:26:39.000Z",
+        "published_date": "2014-11-30T00:00:00.000Z",
+        "vuln_type": "UPLOAD",
+        "references": {
+          "url": [
+            "https://whatisgon.wordpress.com/2014/11/30/another-revslider-vulnerability/"
+          ],
+          "cve": [
+            "2014-9735"
+          ],
+          "exploitdb": [
+            "35385"
+          ],
+          "metasploit": [
+            "exploit/unix/webapp/wp_revslider_upload_execute"
+          ]
+        },
+        "fixed_in": "2.8.3"
+      }
+    ]
+  }
+}
