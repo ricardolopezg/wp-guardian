@@ -3,13 +3,14 @@
 from bs4 import BeautifulSoup
 import re
 import urllib.request
-from wp_guardian import *
+# from wp_guardian import *
 
-wp_page = urllib.request.urlopen(url+'/wordpress').read()
+def url_input(website):
+    wp_page = urllib.request.urlopen(website+'/wordpress').read()
+    soup = BeautifulSoup(wp_page,"html.parser")
+    return soup
 
-soup = BeautifulSoup(wp_page,"html.parser")
-
-def wp_version_finder(webpage):
+def wp_version_finder(soup):
     for tag in soup.find_all("meta"):
         if tag.get("name", None) == "generator":
             version = tag.get("content", None).split(' ')
