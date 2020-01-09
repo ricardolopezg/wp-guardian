@@ -4,13 +4,15 @@ import json
 import requests
 from requests.compat import urljoin
 from config import *
-from wp_version_scanner import *
+# from wp_version_scanner import *
 import vulners
 
 def wp_version_exploit_finder(wp_version_vulns):
     wp_version_vuln_dict = wp_version_vulns
     vulnerabilities = wp_version_vuln_dict[wp_scanner_version]["vulnerabilities"]
     counter = 0
+    global cve_list_by_vuln
+    cve_list_by_vuln = []
 
     for vuln in vulnerabilities:
         vuln_title = wp_version_vuln_dict[wp_scanner_version]["vulnerabilities"][counter]["title"]
@@ -29,32 +31,27 @@ def wp_version_exploit_finder(wp_version_vulns):
                 for exps in range(len(refs)):
                     print(refs[counter2])
                     counter2 += 1
-            if exp_type == "metasploit":
-                print("\nMetasploit:")
-                exploits = wp_version_vuln_dict[wp_scanner_version]["vulnerabilities"][counter]["references"]["metasploit"]
-                for exps in range(len(exploits)):
-                    print(exploits[counter2])
-                    counter2 += 1
             if exp_type == "cve":
                 print("\nCVE:")
                 exploits = wp_version_vuln_dict[wp_scanner_version]["vulnerabilities"][counter]["references"]["cve"]
                 for exps in range(len(exploits)):
                     print(exploits[counter2])
-                    counter2 += 1
-            if exp_type == "exploitdb":
-                print("\nExploitDB:")
-                exploits = wp_version_vuln_dict[wp_scanner_version]["vulnerabilities"][counter]["references"]["exploitdb"]
-                for exps in range(len(exploits)):
-                    print(exploits[counter2])
+                    cve_list_by_vuln.append("CVE-" + exploits[counter2])
                     counter2 += 1
         counter += 1
         print("\n###########################################################\n")
+
+    print(cve_list_by_vuln)
+    print(len(cve_list_by_vuln))
+    vulners(cve_list_by_vuln)
+
 
 def wpvulndb(wpversion):
     global wp_scanner_version
     # wp_scanner_version = wp_version_finder(soup) # function in wp_version_scanner.py
     wp_scanner_version = wpversion
     print(wpversion)
+
     wordpress_version = wpversion.replace(".", "") # ~~~> wordpress version must not include periods
 
     base_url = "https://wpvulndb.com/api/v3/"
@@ -101,21 +98,21 @@ def vulners_cve_parser(cve_info):
         counter += 1
         print("\n###########################################################\n")
 
-    with open('vulnerability_data.json', 'w') as outfile:
-        json.dump(vulnerability_data_json_object, outfile)
+    # with open('vulnerability_data.json', 'w') as outfile:
+    #     json.dump(vulnerability_data_json_object, outfile)
 
-def vulners():
+def vulners(cve_list):
     global cve_list_input
-    global multiple_cve
-    cve_list_input = ["CVE-2014-8810", "CVE-2014-8809"]
+    # global multiple_cve
+    cve_list_input = cve_list
 
     vulners_api = vulners.Vulners(api_key=vulners_api_key)
 
     # Search multiple CVE's
     multiple_cve = vulners_api.documentList(cve_list_input)
-    # print(type(CVE_DATA)) # type: dictionary
-    multiple_cve_json_str = json.dumps(multiple_cve, indent=2)
-    print(multiple_cve_json_str)
+    # print(type(multiple_cve)) # type: dictionary
+    # multiple_cve_json_str = json.dumps(multiple_cve, indent=2)
+    # print(multiple_cve_json_str)
 
     vulners_cve_parser(multiple_cve)
 
