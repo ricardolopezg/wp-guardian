@@ -3,7 +3,6 @@
 from bs4 import BeautifulSoup
 import re
 import urllib.request
-# from wp_guardian import *
 
 def url_input(website):
     wp_page = urllib.request.urlopen(website+'/wordpress').read()

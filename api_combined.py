@@ -95,8 +95,8 @@ def vulners_cve_parser(cve_info):
         CVSS_vector = cve_vuln_dict[cve_list_input[counter]]["cvss"]["vector"]
         print("\nCVSS Vector:\n" + str(CVSS_vector))
 
-        refrence = cve_vuln_dict[cve_list_input[counter]]["href"]
-        print("\nReference:\n" + str(refrence))
+        reference = cve_vuln_dict[cve_list_input[counter]]["href"]
+        print("\nReference:\n" + str(reference))
 
         counter += 1
         print("\n###########################################################\n")
@@ -119,9 +119,3 @@ def vulners():
 
     vulners_cve_parser(multiple_cve)
 
-# def main():
-#     vulners()
-#     wpvulndb()
-#
-# if __name__ == '__main__':
-#     main()
