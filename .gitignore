@@ -1,7 +1,14 @@
 config.py
 __pycache__/
 wp_vulners_testing.py
-test.txt
 data_structure.json
+data_structure_design.json
 report_data.json
-Reports/
+sample_output_obj_pretty.json
+sample_output_obj.json
+sample_output_plugin_obj.json
+sample_output_plugin_str.txt
+sample_output_str.txt
+sample_output_theme_obj.json
+sample_output_theme_str.txt
+reports/
