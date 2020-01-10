@@ -1,22 +1,19 @@
 #!/usr/bin/env python3
 
 import sys
-# import api_merge
-from page_fuzzer import *
-# from api_wpvulndb import *
-from api_combined import *
-from wp_version_scanner import *
+import api_combined
+import wp_version_scanner as wvs
+import jsontomd
 
-try:
+def main():
     url = sys.argv[1]
-except:
-    exit('Usage: python3 <file> <ip>')
+    if len(url) < 1:
+        exit('Usage: python3 <file> <ip>')
 
-# print(getheader(url))
-# fuzzinstallpage(url)
-# fuzzupdatepage(url)
-soup = url_input(url)
-wp_version = wp_version_finder(soup)
+    soup = wvs.url_input(url)
+    wp_version = wvs.wp_version_finder(soup)
+    filename = api_combined.report_builder(wp_version, url)
+    jsontomd.jsontomd(filename)
 
-# api_combined.py function
-report_builder(wp_version, url)
+if __name__ == "__main__":
+    main()
