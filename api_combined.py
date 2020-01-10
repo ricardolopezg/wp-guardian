@@ -26,16 +26,12 @@ def report_builder(scanned_wp_version, url):
     report_data[report_num]["assets"]["wordpress"]["version"] = scanned_wp_version
     report_data[report_num]["assets"]["wordpress"]["vulnerabilities"] = wpvulndb_api(scanned_wp_version)
 
-    # print(report_data)
-    # pp.pprint(report_data)
-    # print data to file in reports directory
-    report_json_file = f'./reports/wpg-{report_num}.json'
-    with open(report_json_file, 'w') as outfile:
-        # print(outfile.name)
+    # Make sure to create a reports directory to save report files
+    report_json_file_name = f'./reports/wpg-{report_num}.json'
+    with open(report_json_file_name, 'w') as outfile:
         json.dump(report_data, outfile)
 
-    return report_json_file
-    # return report_data
+    return report_json_file_name
 
 def wp_version_exploit_finder(wp_version_vulns, wp_scanner_version):
     vulnerabilities = wp_version_vulns[wp_scanner_version]["vulnerabilities"]
