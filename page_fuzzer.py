@@ -1,31 +1,35 @@
 import requests
 
-def getheader(url):
-    r = requests.get('http://'+url)
-    # print(r.headers)
-    return r.headers
+def getserverversion(url):
+    r = requests.get(url)
+    server = r.headers['Server']
+    return server
     
 def fuzzupdatepage(url):
-    r = requests.get('http://'+url+'/updates.php')
+    r = requests.get(url+'/updates.php')
     if r.status_code == 404:
         updatesphpnotfound = 'updates.php not avialible. Good Job!'
         print(updatesphpnotfound)
-        # return updatesphpnotfound
+        return updatesphpnotfound
     if r.status_code == 200:
         updatesphpfound = 'updates.php is availible. This is not secure'
         print(updatesphpfound)
-        # return updatesphpfound
+        return updatesphpfound
 
 
 def fuzzinstallpage(url):
-    r = requests.get('http://'+url+'/install.php')
+    r = requests.get(url+'/install.php')
     if r.status_code == 404:
         updatesphpnotfound = 'install.php not avialible. Good Job!'
         print(updatesphpnotfound)
-        # return updatesphpnotfound
+        return updatesphpnotfound
     if r.status_code == 200:
         updatesphpfound = 'install.php is availible. This is not secure'
         print(updatesphpfound)
-        # return updatesphpfound
+        return updatesphpfound
 
 # fuzzinstallpage('3.82.102.163/wordpress')
+
+# installpage = page_fuzzer.fuzzinstallpage(url)
+# updatepage = page_fuzzer.fuzzupdatepage(url)
+# serverversion = page_fuzzer.getserverversion(url)
