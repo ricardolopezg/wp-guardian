@@ -1,7 +1,7 @@
 import json
 import os
 
-filename = 'report_data.json'
+filename = outfile.name
 with open(filename, 'r') as f:
     datastore = json.load(f)
 
@@ -44,12 +44,12 @@ def print_sorted_vulns_list(sortedvulnslist):
 md_data= ''
 md_data += f'report #{return_report_id(datastore)}\n\n'
 md_data += f'# {datastore[return_report_id(datastore)]["report title"]}\n\n'
-md_data += f'### {datastore[return_report_id(datastore)]["date"]}\n\n' 
-md_data += f'## Domain\n\n{datastore[return_report_id(datastore)]["domain"]}\n\n' 
-md_data += f'## Summary \n\n\n > {datastore[return_report_id(datastore)]["summary"]}\n\n' 
-md_data += f'## Vulnerabilities  \n\n' 
-md_data += f'### *Wordpress Version: {datastore[return_report_id(datastore)]["assets"]["wordpress"]["version"]}*\n\n' 
-md_data += f'{print_sorted_vulns_list(sortedvulnslist)}\n\n' 
+md_data += f'### {datastore[return_report_id(datastore)]["date"]}\n\n'
+md_data += f'## Domain\n\n{datastore[return_report_id(datastore)]["domain"]}\n\n'
+md_data += f'## Summary \n\n\n > {datastore[return_report_id(datastore)]["summary"]}\n\n'
+md_data += f'## Vulnerabilities  \n\n'
+md_data += f'### *Wordpress Version: {datastore[return_report_id(datastore)]["assets"]["wordpress"]["version"]}*\n\n'
+md_data += f'{print_sorted_vulns_list(sortedvulnslist)}\n\n'
 
 path_folder = 'C:/Users/anon/Desktop/wp-guardian/'
 file_name="finalreport"

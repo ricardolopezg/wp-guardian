@@ -3,3 +3,5 @@ __pycache__/
 wp_vulners_testing.py
 test.txt
 data_structure.json
+report_data.json
+Reports/
