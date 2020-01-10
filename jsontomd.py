@@ -1,7 +1,7 @@
 import json
 import os
 
-filename = 'report_data.json'
+filename = outfile.name
 with open(filename, 'r') as f:
     datastore = json.load(f)
 
