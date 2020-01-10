@@ -19,4 +19,4 @@ soup = url_input(url)
 wp_version = wp_version_finder(soup)
 
 # api_combined.py function
-wpvulndb(wp_version)
+report_builder(wp_version, url)
