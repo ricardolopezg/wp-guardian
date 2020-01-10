@@ -4,118 +4,117 @@ import json
 import requests
 from requests.compat import urljoin
 from config import *
-from wp_version_scanner import *
 import vulners
+import random
+from datetime import datetime
+import pprint
 
-def wp_version_exploit_finder(wp_version_vulns):
-    wp_version_vuln_dict = wp_version_vulns
-    vulnerabilities = wp_version_vuln_dict[wp_scanner_version]["vulnerabilities"]
-    counter = 0
+pp = pprint.PrettyPrinter(indent=2)
+
+def report_builder(scanned_wp_version, url):
+    now = datetime.now()
+    report_num = now.strftime("%Y%m%d-") + str(random.randint(1000,9999))
+    report_data = {}
+
+    report_data[report_num] = {}
+    report_data[report_num]["report title"] = "WP Guardian Vulnerability Scan"
+    report_data[report_num]["date"] = now.strftime("%d/%m/%Y %H:%M:%S")
+    report_data[report_num]["domain"] = url
+    report_data[report_num]["summary"] = ""
+    report_data[report_num]["assets"] = {}
+    report_data[report_num]["assets"]["wordpress"] = {}
+    report_data[report_num]["assets"]["wordpress"]["version"] = scanned_wp_version
+    report_data[report_num]["assets"]["wordpress"]["vulnerabilities"] = wpvulndb_api(scanned_wp_version)
+
+    # print(report_data)
+    # pp.pprint(report_data)
+    # print data to file
+    # with open('report_data.json', 'w') as outfile:
+    #     json.dump(report_data, outfile)
+    return report_data
+
+def wp_version_exploit_finder(wp_version_vulns, wp_scanner_version):
+    vulnerabilities = wp_version_vulns[wp_scanner_version]["vulnerabilities"]
+    vuln_list = []
 
     for vuln in vulnerabilities:
-        vuln_title = wp_version_vuln_dict[wp_scanner_version]["vulnerabilities"][counter]["title"]
-        print("Vulnerability:\n" + vuln_title)
+        report_vulns = {}
 
-        vuln_type = wp_version_vuln_dict[wp_scanner_version]["vulnerabilities"][counter]["vuln_type"]
-        print("\nVulnerability type:\n" + vuln_type)
+        vuln_id = vuln["id"]
+        report_vulns["id"] = vuln_id
 
-        references = wp_version_vuln_dict[wp_scanner_version]["vulnerabilities"][counter]["references"]
+        vuln_title = vuln["title"]
+        report_vulns["title"] = vuln_title
 
-        for exp_type in references:
-            counter2 = 0
-            if exp_type == "url":
-                print("\nReferences:")
-                refs = wp_version_vuln_dict[wp_scanner_version]["vulnerabilities"][counter]["references"]["url"]
-                for exps in range(len(refs)):
-                    print(refs[counter2])
-                    counter2 += 1
-            if exp_type == "metasploit":
-                print("\nMetasploit:")
-                exploits = wp_version_vuln_dict[wp_scanner_version]["vulnerabilities"][counter]["references"]["metasploit"]
-                for exps in range(len(exploits)):
-                    print(exploits[counter2])
-                    counter2 += 1
-            if exp_type == "cve":
-                print("\nCVE:")
-                exploits = wp_version_vuln_dict[wp_scanner_version]["vulnerabilities"][counter]["references"]["cve"]
-                for exps in range(len(exploits)):
-                    print(exploits[counter2])
-                    counter2 += 1
-            if exp_type == "exploitdb":
-                print("\nExploitDB:")
-                exploits = wp_version_vuln_dict[wp_scanner_version]["vulnerabilities"][counter]["references"]["exploitdb"]
-                for exps in range(len(exploits)):
-                    print(exploits[counter2])
-                    counter2 += 1
-        counter += 1
-        print("\n###########################################################\n")
+        vuln_type = vuln["vuln_type"]
+        report_vulns["vuln_type"] = vuln_type
 
-def wpvulndb(wpversion):
-    global wp_scanner_version
-    # wp_scanner_version = wp_version_finder(soup) # function in wp_version_scanner.py
-    wp_scanner_version = wpversion
-    print(wpversion)
-    wordpress_version = wpversion.replace(".", "") # ~~~> wordpress version must not include periods
+        references = vuln["references"]
+        report_vulns["references"] = references
+
+        if 'cve' in references:
+            cve_list = references['cve'] #extract cves and add to list
+            var = vulners_api(cve_list)
+            report_vulns['references']['cve'] = var
+
+        fixed_in = vuln["fixed_in"]
+        report_vulns["fixed_in"] = fixed_in
+
+        vuln_list.append(report_vulns)
+
+    return vuln_list
+
+
+def wpvulndb_api(wpversion):
+    remove_version_periods = wpversion.replace(".", "") # ~~~> wordpress version must not include periods
 
     base_url = "https://wpvulndb.com/api/v3/"
     api_token = {'Authorization': 'Token ' + wpvulndb_api_key}
 
     # WPVULNDB type of api call
-    wordpress_path = "wordpresses/" + wordpress_version
+    wordpress_path = "wordpresses/" + remove_version_periods
     # WPVULNDB API call
     wordpress_url = requests.get(urljoin(base_url, wordpress_path), headers = api_token)
-    # # output dictionary/object
     wordpress_path_json_object = json.loads(wordpress_url.text)
-    # output prettified
-    # wordpress_path_json_str = json.dumps(wordpress_path_json_object, indent=2)
-    # print(wordpress_path_json_str)
-    # print(wordpress_path_json_object)
 
-    # WP Version Function Data
-    # with open('sample_output_obj.json', 'w') as outfile:
-    #     json.dump(wordpress_path_json_object, outfile)
-    # with open('sample_output_obj.json') as json_file:
-    #     wp_version_data = json.load(json_file)
-    # wp_version_exploit_finder(wp_version_data)
-    wp_version_exploit_finder(wordpress_path_json_object)
+    if "error" in wordpress_path_json_object:
+        raise Exception(wordpress_path_json_object['error'] + " --> Change API Key")
+
+    vuln_list = wp_version_exploit_finder(wordpress_path_json_object, wpversion)
+    return vuln_list
 
 def vulners_cve_parser(cve_info):
-    cve_vuln_dict = cve_info
-    counter = 0
+    list_of_cves_dict = []
 
-    for vuln in cve_vuln_dict:
-        print(vuln + ":")
+    for cve_id in cve_info:
+        cve_dict = {}
+        cve_id_for_report_data = cve_id.replace("CVE-", "")
 
-        description = cve_vuln_dict[cve_list_input[counter]]["description"]
-        print("\nDescription:\n" + description)
+        id = cve_info[cve_id]["id"]
+        cve_dict["id"] = id
 
-        CVSS_score = cve_vuln_dict[cve_list_input[counter]]["cvss"]["score"]
-        print("\nCVSS Score:\n" + str(CVSS_score))
+        description = cve_info[cve_id]["description"]
+        cve_dict["description"] = description
 
-        CVSS_vector = cve_vuln_dict[cve_list_input[counter]]["cvss"]["vector"]
-        print("\nCVSS Vector:\n" + str(CVSS_vector))
+        CVSS_score = cve_info[cve_id]["cvss"]["score"]
+        cve_dict["cvss"] = {}
+        cve_dict["cvss"]["score"] = CVSS_score
 
-        reference = cve_vuln_dict[cve_list_input[counter]]["href"]
-        print("\nReference:\n" + str(reference))
+        CVSS_vector = cve_info[cve_id]["cvss"]["vector"]
+        cve_dict["cvss"]["vector"] = CVSS_vector
 
-        counter += 1
-        print("\n###########################################################\n")
+        href = cve_info[cve_id]["href"]
+        cve_dict["href"] = href
 
-    with open('vulnerability_data.json', 'w') as outfile:
-        json.dump(vulnerability_data_json_object, outfile)
+        list_of_cves_dict.append(cve_dict)
 
-def vulners():
-    global cve_list_input
-    global multiple_cve
-    cve_list_input = ["CVE-2014-8810", "CVE-2014-8809"]
+    return list_of_cves_dict
+
+def vulners_api(cve_list):
+    cve_list = [f'CVE-{cve}' for cve in cve_list]
 
     vulners_api = vulners.Vulners(api_key=vulners_api_key)
-
     # Search multiple CVE's
-    multiple_cve = vulners_api.documentList(cve_list_input)
-    # print(type(CVE_DATA)) # type: dictionary
-    multiple_cve_json_str = json.dumps(multiple_cve, indent=2)
-    print(multiple_cve_json_str)
+    multiple_cve = vulners_api.documentList(cve_list)
 
-    vulners_cve_parser(multiple_cve)
-
+    return vulners_cve_parser(multiple_cve)

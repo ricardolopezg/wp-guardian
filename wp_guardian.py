@@ -17,4 +17,6 @@ except:
 # fuzzupdatepage(url)
 soup = url_input(url)
 wp_version = wp_version_finder(soup)
-wpvulndb(wp_version)
+
+# api_combined.py function
+report_builder(wp_version, url)
