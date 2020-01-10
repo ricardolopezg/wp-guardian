@@ -26,8 +26,11 @@ def report_builder(scanned_wp_version, url):
     report_data[report_num]["assets"]["wordpress"]["version"] = scanned_wp_version
     report_data[report_num]["assets"]["wordpress"]["vulnerabilities"] = wpvulndb_api(scanned_wp_version)
 
-    print(report_data)
+    # print(report_data)
     # pp.pprint(report_data)
+    # print data to file
+    # with open('report_data.json', 'w') as outfile:
+    #     json.dump(report_data, outfile)
     return report_data
 
 def wp_version_exploit_finder(wp_version_vulns, wp_scanner_version):
