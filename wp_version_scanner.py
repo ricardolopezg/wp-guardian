@@ -5,7 +5,7 @@ import re
 import urllib.request
 
 def url_input(website):
-    wp_page = urllib.request.urlopen(website+'/wordpress').read()
+    wp_page = urllib.request.urlopen(website).read()
     soup = BeautifulSoup(wp_page,"html.parser")
     return soup
 
