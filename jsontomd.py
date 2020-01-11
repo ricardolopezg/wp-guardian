@@ -53,10 +53,10 @@ def create_md(datastore,sortedcvelist):
         md_data += f'References:\n\n>{information["href"]}\n'
     return md_data
 
-def writetomd(create_md):
-    path_folder = 'C:/Users/anon/Desktop/wp-guardian/'
-    file_name="finalreport"
-    with open(os.path.join(path_folder, f'{file_name}.md'), mode='w') as md_file:
+def writetomd(create_md,datastore):
+    path_folder = './reports'
+    # file_name="finalreport"
+    with open(os.path.join(path_folder, f'wpg-{return_report_id(datastore)}.md'), mode='w') as md_file:
         md_file.write(create_md)
 
 def jsontomd(filename):
@@ -65,7 +65,7 @@ def jsontomd(filename):
     cvelist = getcvelist(datastore,reportid)
     sortedcvelist = sortbycvss(cvelist)
     md_data = create_md(datastore,sortedcvelist)
-    writetomd(md_data)
+    writetomd(md_data,datastore)
 
 if __name__ == "__main__":
     filename = 'data_structure_design.json'
