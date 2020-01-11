@@ -100,7 +100,7 @@ def create_md(datastore, sortedcvelist):
     md_data += f'### Wordpress Version: '
     md_data += f'{datastore[report_id]["assets"]["wordpress"]["version"]}\n\n'
     md_data += f'### Server Version:  '
-    md_data += f' server'
+    md_data += f' server-version '
     return md_data
 
 def writetomd(create_md,datastore):
