@@ -8,7 +8,7 @@ import jsontomd
 def main():
     url = sys.argv[1]
     if len(url) < 1:
-        exit('Usage: python3 <file> <ip>')
+        exit('Usage:wp_guardian.py http(s)://www.example.com(/wordpress)')
 
     soup = wvs.url_input(url)
     wp_version = wvs.wp_version_finder(soup)
