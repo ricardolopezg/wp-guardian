@@ -34,7 +34,8 @@ def get_sorted_vuln_list(datastore, report_id):
     # fetch the list of vulnerabilities for this report id
     vuln_list = datastore[report_id]['assets']['wordpress']['vulnerabilities']
     
-    # define a key function that extracts the largest CVSS_CVE for a single vulnerability
+    # define a key function that extracts the 
+    # largest CVSS_CVE for a single vulnerability
     def get_key(vuln):
         if 'cve' in vuln['references']:
             # get the list of CVEs
@@ -55,19 +56,30 @@ def get_sorted_vuln_list(datastore, report_id):
 
 # format the sorted data
 def format_sorted(vuln_list):
-    # print(sorted_list)
-    for vuln in vuln_list:
-        # print(f'Title:\n{vuln['title']}')
-        print(f'Title:\n{vuln["title"]}\n')
-        print(f'Type:\n{vuln["vuln_type"]}\n')
-        print(f'Fixed in:\n{vuln["fixed_in"]}\n')
+    formatted_cve_data = ''
+    for vuln in vuln_list:                
+        formatted_cve_data += f'---\n'
+        formatted_cve_data += f'### **{vuln["title"]}**\n'
+        formatted_cve_data += f'Vulnerability Type | Fixed In Version | \n'
+        formatted_cve_data += f':--:|:--:'
+        formatted_cve_data += f'\n{vuln["vuln_type"]} | {vuln["fixed_in"]}\n'
         url_list = vuln["references"]["url"]
-        print(f'Reference URLs: {url_list}\n')
         if 'cve' in vuln["references"]:
             cve_list = vuln["references"]["cve"]
-            # print(cve_list)
-            cvelisttomd(cve_list)
+            for cve_data in cve_list:
+                formatted_cve_data += f'### **{cve_data["id"]}**\n'
+                formatted_cve_data += f'CVSS Score | CVSS Vector |\n'
+                formatted_cve_data += f':--:|:--:\n'
+                formatted_cve_data += f'{cve_data["cvss"]["score"]} | {cve_data["cvss"]["vector"]} |\n'
+                formatted_cve_data += f'**Description:**  \n>{cve_data["description"]}\n'
+                url_list.append(cve_data["href"])
+                formatted_cve_data += f'Reference URLs:\n'
+                for urls in url_list:
+                    formatted_cve_data += f'{urls}\n'
+                    print(formatted_cve_data)
+                    return formatted_cve_data
 
+#TODO this function can probably be deleted
 def cvelisttomd(cve_list):
     for information in cve_list:
         # print(information)
@@ -78,30 +90,29 @@ def cvelisttomd(cve_list):
         cve_data += f'**CVSS Vector:** \n\n {information["cvss"]["vector"]}\n\n'
         cve_data += f'>{information["description"]}\n\n'
         cve_data += f'References:\n\n>{information["href"]}\n'
-        print(cve_data)
+        # print(cve_data)
     # return str(cve_list) # TODO formating for the list
-
 
 
 # takes in datastore and sortedcve list and creates data for md
 # This is the top part of the report <Report Header>
 def create_md(datastore, sortedcvelist):
     report_id = return_report_id(datastore)
-    md_data= ''
-    md_data += f'report #'
-    md_data += f' {report_id}\n\n'
-    md_data += f'# {datastore[report_id]["report title"]}\n\n'
-    md_data += f'### {datastore[report_id]["date"]}\n\n' 
-    md_data += f'## Domain\n\n'
-    md_data += f'{datastore[report_id]["domain"]}\n\n' 
-    md_data += f'## Summary \n\n' 
-    md_data += f'> {datastore[report_id]["summary"]}\n\n' 
-    # md_data += f'## Vulnerabilities  \n\n' 
-    md_data += f'### Wordpress Version: '
-    md_data += f'{datastore[report_id]["assets"]["wordpress"]["version"]}\n\n'
-    md_data += f'### Server Version:  '
-    md_data += f' server-version '
-    return md_data
+    md_header= ''
+    md_header += f'report #'
+    md_header += f' {report_id}\n\n'
+    md_header += f'# {datastore[report_id]["report title"]}\n\n'
+    md_header += f'### {datastore[report_id]["date"]}\n\n' 
+    md_header += f'## Domain\n\n'
+    md_header += f'{datastore[report_id]["domain"]}\n\n' 
+    md_header += f'## Summary \n\n' 
+    md_header += f'> {datastore[report_id]["summary"]}\n\n' 
+    # md_header += f'## Vulnerabilities  \n\n' 
+    md_header += f'### Wordpress Version: '
+    md_header += f'{datastore[report_id]["assets"]["wordpress"]["version"]}\n\n'
+    md_header += f'### Server Version:  '
+    md_header += f' server-version '
+    return md_header
 
 def writetomd(create_md,datastore):
     path_folder = './reports'
