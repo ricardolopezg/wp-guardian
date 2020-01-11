@@ -16,7 +16,6 @@ def fuzzupdatepage(url):
         print(updatesphpfound)
         return updatesphpfound
 
-
 def fuzzinstallpage(url):
     r = requests.get(url+'/install.php')
     if r.status_code == 404:
@@ -27,9 +26,3 @@ def fuzzinstallpage(url):
         updatesphpfound = 'install.php is availible. This is not secure'
         print(updatesphpfound)
         return updatesphpfound
-
-# fuzzinstallpage('3.82.102.163/wordpress')
-
-# installpage = page_fuzzer.fuzzinstallpage(url)
-# updatepage = page_fuzzer.fuzzupdatepage(url)
-# serverversion = page_fuzzer.getserverversion(url)
