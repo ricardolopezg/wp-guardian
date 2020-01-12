@@ -1,4 +1,4 @@
-# wp-guardian
+# WP Guardian
 Wordpress vulnerability scanner and reporting tool. 
 
 ## Installation
