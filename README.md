@@ -4,9 +4,9 @@ Wordpress vulnerability scanner and reporting tool.
 ## Installation
 - API keys required
 
-    https://www.wpvulndb.com
+    https://www.wpvulndb.com - 50 free daily requests per token
 
-    https://www.vulnersdb.com
+    https://www.vulnersdb.com - 1,000 free monthly requests per token
 
 
 - Clone github repo
