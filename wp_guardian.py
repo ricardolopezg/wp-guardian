@@ -14,6 +14,7 @@ def main():
     wp_version = wvs.wp_version_finder(soup)
     filename = api_combined.report_builder(wp_version, url)
     jsontomd.jsontomd(filename)
+    print("WP GUARDIAN SCAN COMPLETE! Check your reports directory.")
 
 if __name__ == "__main__":
     main()
