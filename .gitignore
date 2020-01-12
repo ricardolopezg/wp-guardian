@@ -15,3 +15,9 @@ sample_object.json
 sample_report_output.md
 finalreport.md
 reports/
+old_files/
+api_merge.py
+api_vulners.py
+api_wpvulndb.py
+wp_vulners_exploit_finder.py
+wp_wpvulndb_exploit_finder.py
