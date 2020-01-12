@@ -66,12 +66,12 @@ def format_sorted(vuln_list):
             for cve_data in cve_list:
                 url_list.append(cve_data["href"])
                 formatted_cve_data += f'\n### {cve_data["id"]}\n\n'
-                formatted_cve_data += f'  Vulnerability Type   |   Fixed In Version   | \n'
-                formatted_cve_data += f':--:|:--:'
-                formatted_cve_data += f'\n  {vuln["vuln_type"]} | {vuln["fixed_in"]} \n\n'
-                formatted_cve_data += f'  CVSS Score  |  CVSS Vector  | \n'
-                formatted_cve_data += f':--:|:--:'
-                formatted_cve_data += f'\n{cve_data["cvss"]["score"]} | {cve_data["cvss"]["vector"]} |\n'
+                formatted_cve_data += f'  Vulnerability Type   |   Fixed In Version   |  CVSS Score  |  CVSS Vector\n'
+                formatted_cve_data += f':--:|:--:|:--:|:--:'
+                formatted_cve_data += f'\n  {vuln["vuln_type"]} | {vuln["fixed_in"]}  | {cve_data["cvss"]["score"]} | {cve_data["cvss"]["vector"]}\n\n'
+                # formatted_cve_data += f'  CVSS Score  |  CVSS Vector  | \n'
+                # formatted_cve_data += f':--:|:--:'
+                # formatted_cve_data += f'\n{cve_data["cvss"]["score"]} | {cve_data["cvss"]["vector"]} |\n\n'
                 formatted_cve_data += f'**Description:** \n\n'
                 formatted_cve_data += f'>{cve_data["description"]}\n\n'
                 
@@ -95,11 +95,11 @@ def create_md(datastore, sortedcvelist,server_version,install_page,update_page):
     md_header += f'{datastore[report_id]["domain"]}\n\n' 
     md_header += f'## Summary \n\n' 
     md_header += f'> {datastore[report_id]["summary"]}\n\n'
-    md_header += f'\n\n>{install_page}\n\n>{update_page}\n\n'
+    md_header += f'\n\n{install_page}\n\n{update_page}\n\n'
 
-    md_header += f'### Wordpress Version: '
+    md_header += f'#### Wordpress Version: '
     md_header += f'{datastore[report_id]["assets"]["wordpress"]["version"]}\n\n'
-    md_header += f'### Server Version: {server_version}\n\n '
+    md_header += f'#### Server Version: {server_version}\n\n '
     return md_header
 
 def writetomd(md_header,format_sorted,datastore):
