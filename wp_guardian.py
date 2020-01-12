@@ -22,15 +22,21 @@ def main():
     print('\n')
 
 
+    print(f'[+] Running report on {url}\n')
     soup = wvs.url_input(url)
+    print(f'[+] Scanning WordPress version\n')
     wp_version = wvs.wp_version_finder(soup)
-    filename = api_combined.report_builder(wp_version, url)
+    print(f'[+] Scanning server version\n')
     server_version = page_fuzzer.getserverversion(url)
+    print(f'[+] Fuzzing pages for data exposure\n')
     update_page = page_fuzzer.fuzzupdatepage(url)
     install_page = page_fuzzer.fuzzinstallpage(url)
+    print(f'[+] Building vulnerability profile\n')
+    filename = api_combined.report_builder(wp_version, url)
+    print(f'[+] Creating report\n')
     jsontomd.jsontomd(filename,server_version,install_page,update_page)
 
-    print("WP GUARDIAN SCAN COMPLETE! Check your reports directory for your scan results in JSON and MD format. <e.g. <date><time>.md>")
+    print(f'[+] WP GUARDIAN SCAN COMPLETE!\n\n++ Check your reports directory for your scan results in JSON and MD format. e.g. <date>-<time>.md ++')
     print('\n')
 
 if __name__ == "__main__":
