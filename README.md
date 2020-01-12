@@ -2,27 +2,27 @@
 Wordpress vulnerability scanner and reporting tool. 
 
 ## Installation
-API keys required
+- API keys required
 
-https://www.wpvulndb.com
+    https://www.wpvulndb.com
 
-https://www.vulnersdb.com
-
-
-Clone github repo
-
-    git clone https://github.com/ricardolopezg/wp-guardian
+    https://www.vulnersdb.com
 
 
-Install dependencies
+- Clone github repo
 
-    pip install -r requirements.txt
+        git clone https://github.com/ricardolopezg/wp-guardian
 
-Update config.py file with your api keys
 
-Usage
+- Install dependencies
 
-    python3 wp_guardian.py http(s)://www.example.com/
+        pip install -r requirements.txt
+
+- Update config.py file with your api keys
+
+- Usage
+
+        python3 wp_guardian.py http(s)://www.example.com/
 
 Markdown report will be generated and saves to the reports folder, along with with a json formatted report.
 
