@@ -84,7 +84,7 @@ def format_sorted(vuln_list):
 
 # takes in datastore and sortedcve list and creates data for md
 # This is the top part of the report <Report Header>
-def create_md(datastore, sortedcvelist):
+def create_md(datastore, sortedcvelist,server_version,install_page,update_page):
     report_id = return_report_id(datastore)
     md_header= ''
     md_header += f'Report #'
@@ -94,12 +94,12 @@ def create_md(datastore, sortedcvelist):
     md_header += f'## Domain\n\n'
     md_header += f'{datastore[report_id]["domain"]}\n\n' 
     md_header += f'## Summary \n\n' 
-    md_header += f'> {datastore[report_id]["summary"]}\n\n' 
-    # md_header += f'## Vulnerabilities  \n\n' 
+    md_header += f'> {datastore[report_id]["summary"]}\n\n'
+    md_header += f'\n\n>{install_page}\n\n>{update_page}\n\n'
+
     md_header += f'### Wordpress Version: '
     md_header += f'{datastore[report_id]["assets"]["wordpress"]["version"]}\n\n'
-    # md_header += f'### Server Version:  '
-    # md_header += f' server-version '
+    md_header += f'### Server Version: {server_version}\n\n '
     return md_header
 
 def writetomd(md_header,format_sorted,datastore):
@@ -108,21 +108,21 @@ def writetomd(md_header,format_sorted,datastore):
     with open(os.path.join(path_folder, f'wpg-{return_report_id(datastore)}.md'), mode='w') as md_file:
         md_file.write(create_md)
 
-def jsontomd(filename):
+def jsontomd(filename,server_version,install_page,update_page):
     datastore = readjson(filename)
     report = return_report_id(datastore)
     vuln_list = get_sorted_vuln_list(datastore, report)
     sortedcvelist = get_sorted_vuln_list(datastore, report) 
-    data_header = create_md(datastore,sortedcvelist)
+    md_data = create_md(datastore,sortedcvelist,server_version,install_page,update_page)
     data_body = format_sorted(vuln_list)
-    writetomd(data_header,data_body,datastore)
+    writetomd(md_data,data_body,datastore)
 
 if __name__ == "__main__":
     filename = 'reports\\wpg-20200110-2484.json'
     datastore = readjson(filename)
-    report = return_report_id(datastore)
-    vuln_list = get_sorted_vuln_list(datastore, report)
-    sortedcvelist = get_sorted_vuln_list(datastore, report)  
-    data_header = create_md(datastore,sortedcvelist)
-    data_body = format_sorted(vuln_list)
-    writetomd(data_header,data_body,datastore)
+    # report = return_report_id(datastore)
+    # vuln_list = get_sorted_vuln_list(datastore, report)
+    # sortedcvelist = get_sorted_vuln_list(datastore, report)  
+    # data_header = create_md(datastore,sortedcvelist)
+    # data_body = format_sorted(vuln_list)
+    # writetomd(data_header,data_body,datastore)
