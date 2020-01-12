@@ -5,7 +5,7 @@ import requests
 from requests.compat import urljoin
 from config import *
 import vulners
-import random
+# import random
 from datetime import datetime
 import pprint
 import os
@@ -14,7 +14,8 @@ pp = pprint.PrettyPrinter(indent=2)
 
 def report_builder(scanned_wp_version, url):
     now = datetime.now()
-    report_num = now.strftime("%Y%m%d-") + str(random.randint(1000,9999))
+    # report_num = now.strftime("%Y%m%d%H%M%S") + str(random.randint(1000,9999))
+    report_num = now.strftime("%Y%m%d%H%M%S")
     report_data = {}
 
     report_data[report_num] = {}

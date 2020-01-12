@@ -29,7 +29,8 @@ def main():
     update_page = page_fuzzer.fuzzupdatepage(url)
     install_page = page_fuzzer.fuzzinstallpage(url)
     jsontomd.jsontomd(filename,server_version,install_page,update_page)
-    print("WP GUARDIAN SCAN COMPLETE! Check your reports directory.")
+
+    print("WP GUARDIAN SCAN COMPLETE! Check your reports directory for your scan results in JSON and MD format. <e.g. <date><time>.md>")
     print('\n')
 
 if __name__ == "__main__":
