@@ -9,6 +9,7 @@ def main():
     url = sys.argv[1]
     if len(url) < 1:
         exit('Usage:wp_guardian.py http(s)://www.example.com(/wordpress)')
+
     print('\n')
     print('██╗    ██╗██████╗      ██████╗ ██╗   ██╗ █████╗ ██████╗ ██████╗ ██╗ █████╗ ███╗   ██╗')
     print('██║    ██║██╔══██╗    ██╔════╝ ██║   ██║██╔══██╗██╔══██╗██╔══██╗██║██╔══██╗████╗  ██║')
@@ -18,6 +19,7 @@ def main():
     print(' ╚══╝╚══╝ ╚═╝          ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝')
     print('\n')
     print('IS BUILDING YOUR REPORT. PLEASE WAIT...')
+    print('\n')
 
 
     soup = wvs.url_input(url)
@@ -28,6 +30,7 @@ def main():
     install_page = page_fuzzer.fuzzinstallpage(url)
     jsontomd.jsontomd(filename,server_version,install_page,update_page)
     print("WP GUARDIAN SCAN COMPLETE! Check your reports directory.")
+    print('\n')
 
 if __name__ == "__main__":
     main()
