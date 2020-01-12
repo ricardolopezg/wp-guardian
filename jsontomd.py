@@ -54,52 +54,40 @@ def get_sorted_vuln_list(datastore, report_id):
     sorted_list = sorted(vuln_list, key=get_key, reverse=True)
     return sorted_list
 
-# format the sorted data
+# format the sorted cve data
 def format_sorted(vuln_list):
     formatted_cve_data = ''
     for vuln in vuln_list:                
         formatted_cve_data += f'---\n'
-        formatted_cve_data += f'### **{vuln["title"]}**\n'
-        formatted_cve_data += f'Vulnerability Type | Fixed In Version | \n'
-        formatted_cve_data += f':--:|:--:'
-        formatted_cve_data += f'\n{vuln["vuln_type"]} | {vuln["fixed_in"]}\n'
+        formatted_cve_data += f'### **{vuln["title"].strip()}**\n'
         url_list = vuln["references"]["url"]
         if 'cve' in vuln["references"]:
             cve_list = vuln["references"]["cve"]
             for cve_data in cve_list:
-                formatted_cve_data += f'### **{cve_data["id"]}**\n'
-                formatted_cve_data += f'CVSS Score | CVSS Vector |\n'
-                formatted_cve_data += f':--:|:--:\n'
-                formatted_cve_data += f'{cve_data["cvss"]["score"]} | {cve_data["cvss"]["vector"]} |\n'
-                formatted_cve_data += f'**Description:**  \n>{cve_data["description"]}\n'
                 url_list.append(cve_data["href"])
-                formatted_cve_data += f'Reference URLs:\n'
+                formatted_cve_data += f'\n### {cve_data["id"]}\n\n'
+                formatted_cve_data += f'  Vulnerability Type   |   Fixed In Version   | \n'
+                formatted_cve_data += f':--:|:--:'
+                formatted_cve_data += f'\n  {vuln["vuln_type"]} | {vuln["fixed_in"]} \n\n'
+                formatted_cve_data += f'  CVSS Score  |  CVSS Vector  | \n'
+                formatted_cve_data += f':--:|:--:'
+                formatted_cve_data += f'\n{cve_data["cvss"]["score"]} | {cve_data["cvss"]["vector"]} |\n'
+                formatted_cve_data += f'**Description:** \n\n'
+                formatted_cve_data += f'>{cve_data["description"]}\n\n'
+                
+                formatted_cve_data += f'**References:** \n\n'
                 for urls in url_list:
-                    formatted_cve_data += f'{urls}\n'
-                    print(formatted_cve_data)
-                    return formatted_cve_data
-
-#TODO this function can probably be deleted
-def cvelisttomd(cve_list):
-    for information in cve_list:
-        # print(information)
-        cve_data=''
-        cve_data += f'\n --- \n ### **{information["id"]}**\n\n'
-        
-        cve_data += f'**CVSS Score:** \n\n {information["cvss"]["score"]}\n\n'
-        cve_data += f'**CVSS Vector:** \n\n {information["cvss"]["vector"]}\n\n'
-        cve_data += f'>{information["description"]}\n\n'
-        cve_data += f'References:\n\n>{information["href"]}\n'
-        # print(cve_data)
-    # return str(cve_list) # TODO formating for the list
-
+                    formatted_cve_data += f'>{urls}\n\n'
+                    
+    # print(formatted_cve_data)
+    return formatted_cve_data
 
 # takes in datastore and sortedcve list and creates data for md
 # This is the top part of the report <Report Header>
 def create_md(datastore, sortedcvelist):
     report_id = return_report_id(datastore)
     md_header= ''
-    md_header += f'report #'
+    md_header += f'Report #'
     md_header += f' {report_id}\n\n'
     md_header += f'# {datastore[report_id]["report title"]}\n\n'
     md_header += f'### {datastore[report_id]["date"]}\n\n' 
@@ -110,41 +98,31 @@ def create_md(datastore, sortedcvelist):
     # md_header += f'## Vulnerabilities  \n\n' 
     md_header += f'### Wordpress Version: '
     md_header += f'{datastore[report_id]["assets"]["wordpress"]["version"]}\n\n'
-    md_header += f'### Server Version:  '
-    md_header += f' server-version '
+    # md_header += f'### Server Version:  '
+    # md_header += f' server-version '
     return md_header
 
-def writetomd(create_md,datastore):
+def writetomd(md_header,format_sorted,datastore):
+    create_md = md_header + format_sorted
     path_folder = './reports'
-    # file_name="finalreport"
     with open(os.path.join(path_folder, f'wpg-{return_report_id(datastore)}.md'), mode='w') as md_file:
         md_file.write(create_md)
 
 def jsontomd(filename):
     datastore = readjson(filename)
     report = return_report_id(datastore)
-
-    # get a sorted cve list
-    # cvelist = getcvelist(datastore,report)
-    # sortedcvelist = sortbycvss(cvelist)
-
-    sortedcvelist = get_sorted_vuln_list(datastore, report)
-    md_data = create_md(datastore,sortedcvelist)
-    writetomd(md_data,datastore)
+    vuln_list = get_sorted_vuln_list(datastore, report)
+    sortedcvelist = get_sorted_vuln_list(datastore, report) 
+    data_header = create_md(datastore,sortedcvelist)
+    data_body = format_sorted(vuln_list)
+    writetomd(data_header,data_body,datastore)
 
 if __name__ == "__main__":
     filename = 'reports\\wpg-20200110-2484.json'
-    # jsontomd(filename)
     datastore = readjson(filename)
-
     report = return_report_id(datastore)
     vuln_list = get_sorted_vuln_list(datastore, report)
-    format_sorted(vuln_list)
-
-
-    # fancy printing
-    
-    # for vuln in vuln_list:
-    #     print(vuln['title'])
-    #     if 'cve' in vuln['references']:
-    #         print([(cve['id'], cve['cvss']) for cve in vuln['references']['cve']])
+    sortedcvelist = get_sorted_vuln_list(datastore, report)  
+    data_header = create_md(datastore,sortedcvelist)
+    data_body = format_sorted(vuln_list)
+    writetomd(data_header,data_body,datastore)
