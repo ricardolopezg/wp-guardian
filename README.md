@@ -18,7 +18,7 @@ Usage
     python3 wp_guardian.py http(s)://www.example.com/
 
 
-## TODO
+## Future Features
 - [ ] add plugin fuzzing
 - [ ] add theme fuzzing
 - [ ] add md5sum version fingerprinting 
