@@ -21,11 +21,12 @@ def report_builder(scanned_wp_version, url):
     report_data[report_num]["report title"] = "WP Guardian Vulnerability Scan"
     report_data[report_num]["date"] = now.strftime("%d/%m/%Y %H:%M:%S")
     report_data[report_num]["domain"] = url
-    report_data[report_num]["summary"] = ""
+    # report_data[report_num]["summary"] = ""
     report_data[report_num]["assets"] = {}
     report_data[report_num]["assets"]["wordpress"] = {}
     report_data[report_num]["assets"]["wordpress"]["version"] = scanned_wp_version
     report_data[report_num]["assets"]["wordpress"]["vulnerabilities"] = wpvulndb_api(scanned_wp_version)
+    write_summary(report_data, report_num)
 
     # Make sure to create a reports directory to save report files
     #TODO refactor to its own function
@@ -70,9 +71,8 @@ def wp_version_exploit_finder(wp_version_vulns, wp_scanner_version):
 
     return vuln_list
 
-
 def wpvulndb_api(wpversion):
-    remove_version_periods = wpversion.replace(".", "") # ~~~> wordpress version must not include periods
+    remove_version_periods = wpversion.replace(".", "")
 
     base_url = "https://wpvulndb.com/api/v3/"
     api_token = {'Authorization': 'Token ' + wpvulndb_api_key}
@@ -115,6 +115,12 @@ def vulners_cve_parser(cve_info):
         list_of_cves_dict.append(cve_dict)
 
     return list_of_cves_dict
+
+def write_summary(full_scan_report_data, report_num):
+    report_base = full_scan_report_data[report_num]
+    num_vulns = len(report_base["assets"]["wordpress"]["vulnerabilities"])
+
+    report_base["summary"] = f'WP Guardian ran a WordPress vulnerability scan and generated a report on {report_base["date"]} for {report_base["domain"]}. {num_vulns} vulnerabilities were found for WordPress {report_base["assets"]["wordpress"]["version"]}. The most critical vulnerabilities are presented first and scale down by CVSS score.'
 
 def vulners_api(cve_list):
     cve_list = [f'CVE-{cve}' for cve in cve_list]
