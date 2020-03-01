@@ -1,4 +1,5 @@
 import requests
+import io
 
 def getserverversion(url):
     r = requests.get(url)
@@ -26,3 +27,27 @@ def fuzzinstallpage(url):
         updatesphpfound = f'install.php is accessible. This is not secure'
         # print(updatesphpfound)
         return updatesphpfound
+
+# Fuzz all directories from list
+def fuzzcommondir(url):
+    with open('./db/dirlisting.txt') as dp:
+        line = dp.readline()
+        while line:
+            combined=url+line.strip()
+            r = requests.get(combined)
+            if r.status_code == 200:
+                pagefound=f'Found\n{combined}\n{r}\n'
+                print(pagefound)
+                
+            if r.status_code != 200:
+                pagenotfound=f'NOT Found\n{combined}\n{r}\n'
+                print(pagenotfound)
+
+            line = dp.readline()
+
+            #TODO create and return list of results
+
+
+if __name__ == "__main__":
+    url = 'https://www.cmohq.agency'
+    fuzzcommondir(url)
