@@ -30,21 +30,24 @@ def fuzzinstallpage(url):
 
 # Fuzz all directories from list
 def fuzzcommondir(url):
+    dirlist=[]
     with open('./db/dirlisting.txt') as dp:
         line = dp.readline()
         while line:
             combined=url+line.strip()
             r = requests.get(combined)
             if r.status_code == 200:
-                pagefound=f'Found\n{combined}\n{r}\n'
-                print(pagefound)
+                pagefound=f'Found {combined} {r}. This may have some data over exposure.'
+                # print(pagefound)
+                dirlist.append(pagefound)
                 
             if r.status_code != 200:
-                pagenotfound=f'NOT Found\n{combined}\n{r}\n'
-                print(pagenotfound)
-
+                pagenotfound=f'NOT Found {combined} {r}. No data overexposure here.'
+                # print(pagenotfound)
+                dirlist.append(pagenotfound)
+            
             line = dp.readline()
-
+        print(dirlist)
             #TODO create and return list of results
 
 
