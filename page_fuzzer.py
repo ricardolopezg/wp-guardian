@@ -31,7 +31,7 @@ def fuzzinstallpage(url):
 # Fuzz all directories from list
 def fuzzcommondir(url):
     dirlist=[]
-    with open('./db/dirlisting.txt') as dp:
+    with open('./db/commonfile.txt') as dp:
         line = dp.readline()
         while line:
             combined=url+line.strip()
@@ -40,9 +40,9 @@ def fuzzcommondir(url):
                 pagefound=f'Found {combined} {r}. This may have some data over exposure.'
                 dirlist.append(pagefound)
                 
-            if r.status_code != 200:
-                pagenotfound=f'NOT Found {combined} {r}. No data overexposure here.'
-                dirlist.append(pagenotfound)
+            # if r.status_code != 200:
+            #     pagenotfound=f'NOT Found {combined} {r}. No data overexposure here.'
+            #     dirlist.append(pagenotfound)
             
             line = dp.readline()
         
@@ -51,5 +51,5 @@ def fuzzcommondir(url):
 
         
 if __name__ == "__main__":
-    url = 'https://www.cmohq.agency'
+    url = 'https://www.cmohq.agency/'
     fuzzcommondir(url)
