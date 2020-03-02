@@ -47,10 +47,11 @@ def fuzzcommondir(url):
                 dirlist.append(pagenotfound)
             
             line = dp.readline()
+        
         print(dirlist)
-            #TODO create and return list of results
+        return dirlist
 
-
+        
 if __name__ == "__main__":
     url = 'https://www.cmohq.agency'
     fuzzcommondir(url)
