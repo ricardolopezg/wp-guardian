@@ -1,5 +1,6 @@
 import requests
 import io
+import mal_link_scan
 
 def getserverversion(url):
     r = requests.get(url)
@@ -48,8 +49,56 @@ def fuzzcommondir(url):
         
         print(dirlist)
         return dirlist
-
+def fuzzthemes(url):
+    dirlist=[]
+    with open('./db/wp-themes.fuzz.txt') as dp:
+        line = dp.readline()
+        while line:
+            combined=url+line.strip()
+            r = requests.get(combined)
+            if r.status_code == 200:
+                pagefound=f'Theme found; {combined} {r.status_code}'
+                print(pagefound)
+                dirlist.append(pagefound)
+            line = dp.readline()
         
+        print(dirlist)
+        return dirlist
+
+def fuzzplugins(url):
+    dirlist=[]
+    with open('./db/wp-plugins.fuzz.txt') as dp:
+        line = dp.readline()
+        while line:
+            combined=url+line.strip()
+            r = requests.get(combined)
+            if r.status_code == 200:
+                pagefound=f'Plugin Found; {combined} {r.status_code}'
+                # print(pagefound)
+                dirlist.append(pagefound)
+            line = dp.readline()
+        
+        # print(dirlist)
+        return dirlist        
+def fuzzallpages(url):
+    dirlist=[]
+    with open('./db/wordpress.fuzz.txt') as dp:
+        line = dp.readline()
+        while line:
+            combined=url+line.strip()
+            r = requests.get(combined)
+            if r.status_code == 200:
+                pagefound=f'Page Found; {combined} {r.status_code}'
+                # print(r.text)
+                # print(pagefound)
+                dirlist.append(combined)
+            line = dp.readline()
+            return dirlist
+
 if __name__ == "__main__":
     url = 'https://www.cmohq.agency/'
-    fuzzcommondir(url)
+    linklist = fuzzallpages(url)
+    mal_link_scan.findlinks(linklist)
+    # fuzzplugins(url)
+    # fuzzcommondir(url)
+    # fuzzthemes(url)
